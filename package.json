@@ -17,7 +17,10 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "docker:dev:up": "docker-compose up dev-db -d",
+    "docker:dev:rm": "docker-compose rm dev-db -s -f -v",
+    "docker:dev:restart": "pnpm docker:dev:rm && pnpm docker:dev:up"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
@@ -25,6 +28,7 @@
     "@nestjs/platform-express": "^11.0.1",
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
+    "dotenv": "^17.4.2",
     "pg": "^8.20.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1"
