@@ -20,7 +20,10 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "docker:dev:up": "docker-compose up dev-db -d",
     "docker:dev:rm": "docker-compose rm dev-db -s -f -v",
-    "docker:dev:restart": "pnpm docker:dev:rm && pnpm docker:dev:up"
+    "docker:dev:restart": "pnpm docker:dev:rm && pnpm docker:dev:up",
+    "prisma:dev:deploy": "pnpm prisma migrate deploy",
+    "db:wait": "wait-on tcp:localhost:5000",
+    "db:dev:restart": "pnpm docker:dev:rm && pnpm docker:dev:up && pnpm db:wait && pnpm prisma:dev:deploy"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
@@ -36,7 +39,8 @@
     "dotenv": "^17.4.2",
     "pg": "^8.20.0",
     "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "wait-on": "^9.0.10"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",

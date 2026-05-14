@@ -30,24 +30,31 @@ export class AuthService {
 
   async register(dto: RegisterAuthDto) {
     try {
-      const hash = await argon.hash(dto.password);
+      const { password, ...rest } = dto;
+
+      const hash = await argon.hash(password);
 
       const user = await this.prisma.user.create({
         data: {
-          ...dto,
+          ...rest,
+          // email: dto.email,
           hash,
         },
       });
+
       return {
         message: 'User created successfully',
         user: { id: user.id, email: user.email },
       };
     } catch (error) {
-      if (error instanceof PrismaClientKnownRequestError) {
-        if (error.code === 'P2002') {
-          throw new ForbiddenException('Credentials already taken');
-        }
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
+        throw new ForbiddenException('Credentials already taken');
       }
+
+      throw error;
     }
   }
 }

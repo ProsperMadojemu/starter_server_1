@@ -36,6 +36,6 @@ export class LoginAuthDto {
   email!: string;
 
   @IsNotEmpty()
-  @IsStrongPassword()
+  @IsString()
   password!: string;
 }
