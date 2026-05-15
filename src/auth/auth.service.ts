@@ -7,10 +7,16 @@ import { LoginAuthDto, RegisterAuthDto } from './dto/auth.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import * as argon from 'argon2';
 import { PrismaClientKnownRequestError } from '../generated/prisma/internal/prismaNamespace';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private jwt: JwtService,
+    private config: ConfigService,
+  ) {}
   async login(dto: LoginAuthDto) {
     const user = await this.prisma.user.findUnique({
       where: { email: dto.email },
@@ -23,9 +29,14 @@ export class AuthService {
     if (!isPasswordValid)
       throw new UnauthorizedException('Invalid credentials');
 
+    const token = await this.jwt.signAsync(
+      { id: user.id, email: user.email },
+      { expiresIn: '15m', secret: this.config.get<string>('JWT_SECRET') },
+    );
+
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { hash, ...rest } = user;
-    return { message: 'Login successful', user: rest };
+    return { message: 'Login successful', user: rest, access_token: token };
   }
 
   async register(dto: RegisterAuthDto) {
