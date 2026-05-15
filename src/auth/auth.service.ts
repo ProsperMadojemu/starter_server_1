@@ -25,7 +25,7 @@ export class AuthService {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { hash, ...rest } = user;
-    return rest;
+    return { message: 'Login successful', user: rest };
   }
 
   async register(dto: RegisterAuthDto) {
