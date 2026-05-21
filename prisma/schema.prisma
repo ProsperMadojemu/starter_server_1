@@ -7,6 +7,7 @@ generator client {
   provider     = "prisma-client"
   output       = "../src/generated/prisma"
   moduleFormat = "cjs" // The moduleFormat configuration is required because Prisma v7 ships as an ES module by default, which does not work with NestJS's CommonJS setup. Setting moduleFormat to cjs forces Prisma to generate a CommonJS module instead of ESM.
+  importFileExtension = "ts" // The importFileExtension configuration is required to ensure that the generated Prisma client imports TypeScript files, which is necessary for compatibility with NestJS's CommonJS setup.
 }
 
 datasource db {
